@@ -4,6 +4,7 @@ import com.openclassrooms.SafetyNetAlerts.model.*;
 import com.openclassrooms.SafetyNetAlerts.util.AgeCalculator;
 import com.openclassrooms.SafetyNetAlerts.util.PersonUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,5 +66,34 @@ public class FireStationService {
         return new FireStationServiceResponse(personInfos, numberOfAdults, numberOfChildren);
     } // end of getFireStationByStationNumber
 
+    public List<ChildAlertResponse> getChildByAddress( String address){
+        // getting data from the service into DataLoaded POJO
+        DataLoaded dataLoaded = dataLoaderService.loadData();
+
+        List<Person> persons = dataLoaded.getPersons();
+        List<MedicalRecord> medicalRecords = dataLoaded.getMedicalrecords();
+
+        List<Person> houseHoldMembers = persons.stream()
+                .filter(person -> person.getAddress().equalsIgnoreCase(address))
+                .toList();
+//        logger.info("Total Household members: {}", houseHoldMembers.size());
+
+        // getting children i.e. anyone under the age of 18
+        List<ChildAlertResponse>  children = houseHoldMembers.stream()
+//                .filter(person -> person.getAddress().equalsIgnoreCase(address) && PersonUtils.isChild(person, medicalRecords))
+                .map(person -> {
+                    MedicalRecord medicalRecord = PersonUtils.findMedicalRecord(person, medicalRecords);
+                    if (medicalRecord != null){
+                        if (PersonUtils.isChild(person, medicalRecords)) {
+                            return new ChildAlertResponse(person.getFirstName(), person.getLastName(),
+                                    AgeCalculator.calculateAge(medicalRecord.getBirthdate(), "MM/dd/yyyy"), houseHoldMembers);
+                        }
+                    }
+                    return null;
+                })
+                .filter(child -> child != null)  // removing nulls
+                .collect(Collectors.toList());  // converting to list
+        return children;
+    } // end of getChildByAddress
 
 }
