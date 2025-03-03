@@ -4,7 +4,6 @@ import com.openclassrooms.SafetyNetAlerts.model.*;
 import com.openclassrooms.SafetyNetAlerts.util.AgeCalculator;
 import com.openclassrooms.SafetyNetAlerts.util.PersonUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -126,4 +125,44 @@ public class FireStationService {
 
     } // end of getPhoneNumbersWithinFireStationJurisdiction
 
-}
+      /*http://localhost:8080/fire?address=<address>
+    This URL should return the fire station number that services the provided address as well as a list
+    of all of the people living at the address. This list should include each person’s name, phone number,
+     age, medications with dosage, and allergies.
+    */
+
+    public FireResponse getFireStationByAddress( String address) {
+        // getting data from the service into DataLoaded POJO
+        DataLoaded dataLoaded = dataLoaderService.loadData();
+
+        List<Person> persons = dataLoaded.getPersons();
+        List<MedicalRecord> medicalRecords = dataLoaded.getMedicalrecords();
+        List<FireStation> fireStations = dataLoaded.getFirestations(); // getting fire stations
+
+        // getting fire station by address
+        List<String> fireStationsNumber = fireStations.stream()
+                .filter(firestation -> firestation.getAddress().equalsIgnoreCase(address))
+                .map(FireStation::getStation)
+                .collect(Collectors.toList());
+
+        // getting Persons based on the address, with medical and allergies
+        List<PersonDetails> personDetails = persons.stream()
+                .filter(person -> person.getAddress().equalsIgnoreCase(address))
+                .map(person -> {
+                    MedicalRecord medicalRecord = PersonUtils.findMedicalRecord(person, medicalRecords);
+                    int age = AgeCalculator.calculateAge(medicalRecord.getBirthdate(), "MM/dd/yyyy");
+                    return new PersonDetails(
+                                person.getFirstName(),
+                                person.getLastName(),
+                                person.getPhone(),
+                                age,
+                                medicalRecord.getMedications(),
+                                medicalRecord.getAllergies());
+                })
+                .collect(Collectors.toList());
+
+        //return the response
+        return new FireResponse(fireStationsNumber, personDetails);
+
+    } // end of getFireStationByAddress
+} // end of class

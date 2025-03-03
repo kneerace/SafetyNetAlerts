@@ -1,6 +1,7 @@
 package com.openclassrooms.SafetyNetAlerts.controller;
 
 import com.openclassrooms.SafetyNetAlerts.model.ChildAlertResponse;
+import com.openclassrooms.SafetyNetAlerts.model.FireResponse;
 import com.openclassrooms.SafetyNetAlerts.model.FireStationServiceResponse;
 import com.openclassrooms.SafetyNetAlerts.service.FireStationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,10 @@ public class DataController {
 
     } // end of getPhoneNumbersWithinFireStationJurisdiction
 
+    @GetMapping("/fire")
+    public FireResponse getFireStationByAddress(@RequestParam String address) {
+
+        return fireStationService.getFireStationByAddress(address);
+    } // end of getFireStationByAddress
     } // end of class
 
