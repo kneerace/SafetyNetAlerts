@@ -3,7 +3,7 @@ package com.openclassrooms.SafetyNetAlerts.controller;
 import com.openclassrooms.SafetyNetAlerts.model.*;
 import com.openclassrooms.SafetyNetAlerts.service.FireStationService;
 import com.openclassrooms.SafetyNetAlerts.service.FloodService;
-import com.openclassrooms.SafetyNetAlerts.service.PersonalInfoService;
+import com.openclassrooms.SafetyNetAlerts.service.PersonalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,14 +18,14 @@ public class DataController {
 
     private final FireStationService fireStationService;
     private final FloodService floodService;
-    private final PersonalInfoService personalInfoService ;
+    private final PersonalService personalService;
 
     @Autowired
     public DataController(FireStationService fireStationService, FloodService floodService,
-                          PersonalInfoService personalInfoService) {
+                          PersonalService personalService) {
         this.fireStationService = fireStationService;
         this.floodService =  floodService;
-        this.personalInfoService = personalInfoService;
+        this.personalService = personalService;
     }
 
     @GetMapping("/firestation")
@@ -63,7 +63,7 @@ public class DataController {
     @GetMapping("/personInfo")
     public PersonalInfoResponse getPersonInfo(@RequestParam String firstName, @RequestParam String lastName) {
 //        logger.info("Request: /personInfo?firstname={}&lastname={}", firstName, lastName);
-        PersonalInfoResponse response = personalInfoService.getPersonInfo(firstName, lastName);
+        PersonalInfoResponse response = personalService.getPersonInfo(firstName, lastName);
 //        logger.info("Response: {}", response);
         return response;
     }
@@ -73,7 +73,7 @@ public class DataController {
 //        logger.info("Request: /communityEmail?city={}", city);
 //        List<String> emails = personalInfoService.getCommunityEmail(city);
 //        logger.info("Emails for city: {} are: {}", city, emails);
-        EmailListResponse emails = personalInfoService.getCommunityEmailList(city);
+        EmailListResponse emails = personalService.getCommunityEmailList(city);
 //        return emails;
         return emails.getEmailList().isEmpty()
 //                ? ResponseEntity.notFound().build()

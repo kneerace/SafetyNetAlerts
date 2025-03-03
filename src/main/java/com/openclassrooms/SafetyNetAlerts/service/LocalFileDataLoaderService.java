@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -17,10 +18,11 @@ public class LocalFileDataLoaderService implements DataLoaderService {
     public static final String DATA_FILE_NAME = "testdata.json";
 
     public final ObjectMapper objectMapper;
+    private DataLoaded dataLoaded; // store the loaded data in the memory
 
-    public LocalFileDataLoaderService() {
+    public LocalFileDataLoaderService(ObjectMapper objectMapper) {
         this.objectMapper = new ObjectMapper();
-//        this.loadData();
+       this.dataLoaded = loadData();
     } // end of constructor
     @Override
     public DataLoaded loadData() {
@@ -38,5 +40,23 @@ public class LocalFileDataLoaderService implements DataLoaderService {
         }
     } // end of loadData
 
+    public DataLoaded getDataLoaded() {
+        return dataLoaded;
+    } // end of getDataLoaded
 
+    public void saveData(DataLoaded data) {
+        this.dataLoaded = data;  // here we are just updating in-memory data
+/*
+// if we want to save into the file
+
+        try{
+            objectMapper.writerWithDefaultPrettyPrinter()
+                    .writeValues(new File(DATA_FILE_NAME));
+            logger.info("Data saved successfully to file: {}, Data: {}", DATA_FILE_NAME, data);
+        } catch (IOException e) {
+            logger.error("Failed to save data to file {}", DATA_FILE_NAME, e);
+            throw new RuntimeException("Failed to save data to file", e);
+        }
+        */
+    }
 } // end of class
