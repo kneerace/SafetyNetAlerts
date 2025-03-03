@@ -19,7 +19,7 @@ public class FireStationService {
 
     public FireStationServiceResponse getFireStationByStationNumber( int stationNumber) {
         // getting data from the service into DataLoaded POJO
-        DataLoaded dataLoaded = dataLoaderService.loadData();
+        DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
 
         List<Person> persons = dataLoaded.getPersons();
         List<MedicalRecord> medicalRecords = dataLoaded.getMedicalrecords();
@@ -47,7 +47,6 @@ public class FireStationService {
                         person.getFirstName(), person.getLastName(), person.getAddress(), person.getPhone()
                 )).collect(Collectors.toList());
 
-
         //getting adult and childred ( anyone aged 18 or younger
         int numberOfAdults = 0;
         int numberOfChildren = 0;
@@ -67,7 +66,7 @@ public class FireStationService {
 
     public List<ChildAlertResponse> getChildByAddress( String address){
         // getting data from the service into DataLoaded POJO
-        DataLoaded dataLoaded = dataLoaderService.loadData();
+        DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
 
         List<Person> persons = dataLoaded.getPersons();
         List<MedicalRecord> medicalRecords = dataLoaded.getMedicalrecords();
@@ -102,7 +101,7 @@ public class FireStationService {
     */
     public List<String> getPhoneNumbersWithinFireStationJurisdiction( int firestation) {
         // getting data from the service into DataLoaded POJO
-        DataLoaded dataLoaded = dataLoaderService.loadData();
+        DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
 
         List<Person> persons = dataLoaded.getPersons();
         List<FireStation> fireStations = dataLoaded.getFirestations(); // getting fire stations
@@ -133,7 +132,7 @@ public class FireStationService {
 
     public FireResponse getFireStationByAddress( String address) {
         // getting data from the service into DataLoaded POJO
-        DataLoaded dataLoaded = dataLoaderService.loadData();
+        DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
 
         List<Person> persons = dataLoaded.getPersons();
         List<MedicalRecord> medicalRecords = dataLoaded.getMedicalrecords();

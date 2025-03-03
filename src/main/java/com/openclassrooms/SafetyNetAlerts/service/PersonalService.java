@@ -10,10 +10,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class PersonalInfoService {
-    private final DataLoaderService dataLoaderService;
-
-    public PersonalInfoService(DataLoaderService dataLoaderService) {
+public class PersonalService {
+    private final LocalFileDataLoaderService dataLoaderService;
+    public PersonalService(LocalFileDataLoaderService dataLoaderService) {
         this.dataLoaderService = dataLoaderService;
     }
 
@@ -28,7 +27,7 @@ This should return the person’s name, address, age, email, list of medications
 
 //        logger.info("Request: /personInfo?firstname={}&lastname={}", firstName, lastName); // Log request
 
-        DataLoaded dataLoaded = dataLoaderService.loadData();
+        DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
 
         List<Person> persons = dataLoaded.getPersons();
         List<MedicalRecord> medicalRecords = dataLoaded.getMedicalrecords();
@@ -63,7 +62,7 @@ This will return the email addresses of all of the people in the city.
 
 //        logger.info("Request: /communityEmail?city={}", city); // Log request
 
-        DataLoaded dataLoaded = dataLoaderService.loadData();
+        DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
 
         List<Person> persons = dataLoaded.getPersons();
 
@@ -83,7 +82,7 @@ This will return the email addresses of all of the people in the city.
 
     public EmailListResponse getCommunityEmailList(String city) {
 
-        List<String> emailList = dataLoaderService.loadData().getPersons().stream()
+        List<String> emailList = dataLoaderService.getDataLoaded().getPersons().stream()
                 .filter(person -> person.getCity().equalsIgnoreCase(city))
                 .map(Person::getEmail)
                 .distinct()
@@ -91,5 +90,13 @@ This will return the email addresses of all of the people in the city.
 
         return new EmailListResponse(emailList);
     } // end of getCommunityEmailList
+
+    public Person addPerson(Person person) {
+        DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
+        List<Person> persons = dataLoaded.getPersons();
+        persons.add(person);
+
+        return person;
+    } // end of addPerson
 
 } // end of class

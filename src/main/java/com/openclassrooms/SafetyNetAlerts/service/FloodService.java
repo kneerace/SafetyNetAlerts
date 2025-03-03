@@ -4,8 +4,6 @@ import com.openclassrooms.SafetyNetAlerts.model.*;
 import com.openclassrooms.SafetyNetAlerts.util.AgeCalculator;
 import com.openclassrooms.SafetyNetAlerts.util.PersonUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,9 +14,9 @@ import java.util.stream.Collectors;
 @Service
 public class FloodService {
 
-    private final DataLoaderService dataLoaderService;
+    private final LocalFileDataLoaderService dataLoaderService;
 
-    public FloodService(DataLoaderService dataLoaderService) {
+    public FloodService(LocalFileDataLoaderService dataLoaderService) {
         this.dataLoaderService = dataLoaderService;
     } // end of constructor
 
@@ -33,7 +31,7 @@ public class FloodService {
 */
 
     public List<HouseholdByStation> getHouseholdByFireStations( List<String> fireStations) {
-        DataLoaded dataLoaded = dataLoaderService.loadData();
+        DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
 
         List<Person> persons = dataLoaded.getPersons();
         List<MedicalRecord> medicalRecords = dataLoaded.getMedicalrecords();
