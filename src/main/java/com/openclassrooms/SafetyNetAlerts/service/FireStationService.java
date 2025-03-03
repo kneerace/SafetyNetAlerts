@@ -96,4 +96,34 @@ public class FireStationService {
         return children;
     } // end of getChildByAddress
 
+    /*
+    http://localhost:8080/phoneAlert?firestation=<firestation_number>
+    This URL should return a list of phone numbers of each person within the fire station’s jurisdiction.
+    We’ll use this to send emergency text messages to specific households.
+    */
+    public List<String> getPhoneNumbersWithinFireStationJurisdiction( int firestation) {
+        // getting data from the service into DataLoaded POJO
+        DataLoaded dataLoaded = dataLoaderService.loadData();
+
+        List<Person> persons = dataLoaded.getPersons();
+        List<FireStation> fireStations = dataLoaded.getFirestations(); // getting fire stations
+
+//        getting Persons based on the address reflected in the fire station
+        List<Person> personsServed = persons.stream()
+                .filter(person -> fireStations.stream()
+                        .filter(firestation1 -> firestation1.getStation().equals(String.valueOf(firestation)))
+                        .map(FireStation::getAddress)
+                        .collect(Collectors.toList())
+                        .contains(person.getAddress()))
+                .collect(Collectors.toList());
+
+        List<String> phoneNumbers = personsServed.stream()
+                .map(Person::getPhone)
+                .collect(Collectors.toSet()) // to remove duplicates
+                .stream()
+                .collect(Collectors.toList());  // converting to list
+        return phoneNumbers;
+
+    } // end of getPhoneNumbersWithinFireStationJurisdiction
+
 }

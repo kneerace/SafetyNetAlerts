@@ -32,5 +32,12 @@ public class DataController {
         return fireStationService.getChildByAddress(address);
     } // end of getChildByAddress
 
+    @GetMapping("/phoneAlert")
+    public List<String> getPhoneNumbersWithinFireStationJurisdiction(@RequestParam int firestation) {
+
+        return fireStationService.getPhoneNumbersWithinFireStationJurisdiction(firestation);
+
+    } // end of getPhoneNumbersWithinFireStationJurisdiction
+
     } // end of class
 
