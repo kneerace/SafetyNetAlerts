@@ -45,14 +45,16 @@ Delete a person. (Use a combination of firstName and lastName as a unique identi
     } // end addPerson
 
     @PutMapping // updating existing person
-    public ResponseEntity<Person> updatePerson(@RequestBody Person person) {
-        Person updatedPerson = personalService.updatePerson(person);
+    public ResponseEntity<?> updatePerson(@RequestBody Person person) {
 
-        if(updatedPerson == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(updatedPerson, HttpStatus.OK);
+        try{
+                Person updatedPerson = personalService.updatePerson(person);
+                return new ResponseEntity<>(updatedPerson, HttpStatus.OK);
+        } catch(IllegalArgumentException e){
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    Map.of("message", e.getMessage())
+        );
+    }
 
 
     } // end updatePerson
