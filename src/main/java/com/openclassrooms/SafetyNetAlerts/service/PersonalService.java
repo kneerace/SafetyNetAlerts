@@ -102,7 +102,9 @@ This will return the email addresses of all of the people in the city.
         boolean personExists = persons.stream()
                         .anyMatch(p-> p.getFirstName().equalsIgnoreCase(person.getFirstName())
                                 && p.getLastName().equalsIgnoreCase(person.getLastName())
-                                && p.getAddress().equalsIgnoreCase(person.getAddress()) );
+                                && p.getAddress().equalsIgnoreCase(person.getAddress())
+                                && p.getCity().equalsIgnoreCase(person.getCity())
+                                && p.getZip().equalsIgnoreCase(person.getZip()));
         if(personExists){
             throw new IllegalArgumentException("Person already exists in the list");
         }
@@ -141,10 +143,10 @@ This will return the email addresses of all of the people in the city.
 //            return person;
 //        }
 
-//        else{
-//            throw new IllegalArgumentException("Person not found in the list");
-            return null;
-//        }
+        else{
+            throw new IllegalArgumentException("Person not found in the list");
+//            return null;
+        }
     } // end of updatePerson
 
 
