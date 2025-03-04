@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController // This means that this class is a Controller and is used where we the return is mapped to the view
 @RequestMapping("/person")  // This means URL's start with /person (after Application path) i.e. basePath localhost:8080/person
 public class PersonController {
@@ -28,12 +30,17 @@ fields can be modified).
 Delete a person. (Use a combination of firstName and lastName as a unique identifier)
      */
     @PostMapping  // adding a new person
-    public ResponseEntity<Person> addPerson(@RequestBody Person person) {
-
-        Person addedPerson = personalService.addPerson(person);
-        // return added person with status created
+    public ResponseEntity<?> addPerson(@RequestBody Person person) {
+        try {
+            Person addedPerson = personalService.addPerson(person);
+            // return added person with status created
 //        return ResponseEntity.status(201).body(addedPerson);
-         return new ResponseEntity<>(addedPerson, HttpStatus.CREATED);
+            return new ResponseEntity<>(addedPerson, HttpStatus.CREATED);
+        } catch(IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    Map.of("message", e.getMessage())
+            );
+        }
 
     } // end addPerson
 
