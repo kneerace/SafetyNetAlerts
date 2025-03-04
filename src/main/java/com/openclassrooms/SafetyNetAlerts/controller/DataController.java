@@ -54,9 +54,9 @@ public class DataController {
     } // end of getFireStationByAddress
 
     @GetMapping("/flood/stations")
-    public List<HouseholdByStation> getHouseholdByFireStations(@RequestParam List<String> fireStations) {
+    public List<HouseholdByStation> getHouseholdByFireStations(@RequestParam List<String> stations) {
 
-        return floodService.getHouseholdByFireStations(fireStations);
+        return floodService.getHouseholdByFireStations(stations);
     } // end of getHouseholdByFireStations
 
 
