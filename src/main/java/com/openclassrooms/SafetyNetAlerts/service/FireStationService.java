@@ -3,6 +3,7 @@ package com.openclassrooms.SafetyNetAlerts.service;
 import com.openclassrooms.SafetyNetAlerts.model.*;
 import com.openclassrooms.SafetyNetAlerts.util.AgeCalculator;
 import com.openclassrooms.SafetyNetAlerts.util.PersonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public class FireStationService {
 
     private final LocalFileDataLoaderService dataLoaderService;
 
+    @Autowired
     public FireStationService(LocalFileDataLoaderService dataLoaderService) {
         this.dataLoaderService = dataLoaderService;
     }
