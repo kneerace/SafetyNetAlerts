@@ -3,15 +3,18 @@ package com.openclassrooms.SafetyNetAlerts.service;
 import com.openclassrooms.SafetyNetAlerts.model.*;
 import com.openclassrooms.SafetyNetAlerts.util.AgeCalculator;
 import com.openclassrooms.SafetyNetAlerts.util.PersonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class PersonalService {
     private final LocalFileDataLoaderService dataLoaderService;
+    @Autowired
     public PersonalService(LocalFileDataLoaderService dataLoaderService) {
         this.dataLoaderService = dataLoaderService;
     }
@@ -91,6 +94,7 @@ This will return the email addresses of all of the people in the city.
         return new EmailListResponse(emailList);
     } // end of getCommunityEmailList
 
+    // Adding a new Person to tha Persons list
     public Person addPerson(Person person) {
         DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
         List<Person> persons = dataLoaded.getPersons();
@@ -98,5 +102,52 @@ This will return the email addresses of all of the people in the city.
 
         return person;
     } // end of addPerson
+
+    /*
+    Update an existing person (at this time, assume that firstName and lastName do not change, but other
+    fields can be modified).
+     */
+    public Person updatePerson(Person person) {
+        DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
+        List<Person> persons = dataLoaded.getPersons();
+        //finding the index of person based on firstName and lastName match
+        Optional<Person> existingPerson = persons.stream()
+                .filter(p -> p.getFirstName().equalsIgnoreCase(person.getFirstName())
+                        && p.getLastName().equalsIgnoreCase(person.getLastName()))
+                .findFirst();
+
+        if(existingPerson.isPresent()){
+            Person foundPerson = existingPerson.get(); // extract the actual person as we can't compare person with optional person
+            foundPerson.setAddress(person.getAddress());
+            foundPerson.setCity(person.getCity());
+            foundPerson.setZip(person.getZip());
+            foundPerson.setPhone(person.getPhone());
+            foundPerson.setEmail(person.getEmail());
+            return foundPerson;
+        }
+
+        //        if(existingPerson.isPresent()){
+//            Person foundPerson = existingPerson.get(); // extract the actual person as we can't compare person with optional person
+//            int index = persons.indexOf(foundPerson);
+//            persons.set(index, person);
+//            return person;
+//        }
+
+//        else{
+//            throw new IllegalArgumentException("Person not found in the list");
+            return null;
+//        }
+    } // end of updatePerson
+
+
+    /*
+    Key Optional Methods
+        Method	                Purpose
+        isPresent() 	        Returns true if a value exists, false otherwise.
+        get()	                Retrieves the value (throws exception if empty).
+        orElse(defaultVal)	    Returns the value if present, otherwise returns defaultVal.
+        orElseThrow()	        Throws an exception if the value is missing.
+        ifPresent(Consumer<T>)	Runs a function if the value exists.
+     */
 
 } // end of class
