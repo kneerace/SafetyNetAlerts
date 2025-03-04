@@ -35,16 +35,85 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-test</artifactId>-->
+<!--			<scope>test</scope>-->
+<!--		</dependency>-->
 <!--		dependency for actuator-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
+
+<!--&lt;!&ndash;		dependency for Amazon S3&ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>com.amazonaws.services</groupId>-->
+<!--			<artifactId>s3</artifactId>-->
+<!--			<version>2.20.0</version> &lt;!&ndash; Use the latest version &ndash;&gt;-->
+<!--		</dependency>-->
+
+<!--		jupiter for testing-->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+<!--			<version>5.10.0</version>-->
+			<scope>test</scope>
+		</dependency>
+
+<!--		mockito for mocking test-->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+<!--			<version>5.0.0</version>-->
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-junit-jupiter</artifactId>
+<!--			<version>5.0.0</version>-->
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-test</artifactId>
+			<version>3.4.2</version>
+			<scope>test</scope>
+		</dependency>
+
+
+<!--		<dependency>-->
+<!--			<groupId>com.fasterxml.jackson.core</groupId>-->
+<!--			<artifactId>jackson-databind</artifactId>-->
+<!--			<version>2.13.3</version> &lt;!&ndash; or the latest version &ndash;&gt;-->
+<!--		</dependency>-->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.13.3</version> <!-- or the latest version -->
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.13.3</version> <!-- or the latest version -->
+		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>6.2.2</version>
+        </dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+<!--			<version>5.3.x</version> &lt;!&ndash; Replace with the version you are using &ndash;&gt;-->
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+<!--			<version>1.9.x</version> &lt;!&ndash; Replace with the version you are using &ndash;&gt;-->
+		</dependency>
+
 
 	</dependencies>
 
