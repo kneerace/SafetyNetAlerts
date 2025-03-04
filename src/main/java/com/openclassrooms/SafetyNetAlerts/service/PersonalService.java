@@ -98,6 +98,14 @@ This will return the email addresses of all of the people in the city.
     public Person addPerson(Person person) {
         DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
         List<Person> persons = dataLoaded.getPersons();
+
+        boolean personExists = persons.stream()
+                        .anyMatch(p-> p.getFirstName().equalsIgnoreCase(person.getFirstName())
+                                && p.getLastName().equalsIgnoreCase(person.getLastName())
+                                && p.getAddress().equalsIgnoreCase(person.getAddress()) );
+        if(personExists){
+            throw new IllegalArgumentException("Person already exists in the list");
+        }
         persons.add(person);
 
         return person;
