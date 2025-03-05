@@ -4,10 +4,7 @@ import com.openclassrooms.SafetyNetAlerts.model.FireStation;
 import com.openclassrooms.SafetyNetAlerts.service.FireStationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -35,6 +32,18 @@ public class FireStationController {
                     Map.of("message", e.getMessage())
             );
         }
-    }
+    } // end of addFireStation
+
+    @PutMapping
+    public ResponseEntity<?> updateFireStation( @RequestBody FireStation fireStation) {
+        try{
+            FireStation  fireStation1 = fireStationService.updateFireStation(fireStation);
+            return ResponseEntity.ok(fireStation1);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    Map.of("message", e.getMessage())
+            );
+        }
+    } // end of updateFireStation
 
 } // end of FireStationController
