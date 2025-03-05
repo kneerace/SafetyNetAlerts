@@ -223,5 +223,32 @@ public class FireStationService {
 
     }   // end of updateFireStation
 
+    public void deleteFireStation(FireStation fireStation) {
+        // getting data from the service into DataLoaded POJO
+        DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
+        List<FireStation> fireStations = dataLoaded.getFirestations();
+
+      /*  boolean fireStationExists = fireStations.stream()
+                .anyMatch(firestation -> firestation.getAddress().equals(fireStation.getAddress())
+                        && firestation.getStation().equals(fireStation.getStation()));
+
+        if (fireStationExists) {
+            fireStations.remove(fireStation);
+            dataLoaderService.saveData(dataLoaded);
+        } else {
+            throw new IllegalArgumentException("Fire station: " + fireStation.getStation() + " with address " + fireStation.getAddress() + " does not exist");
+        }*/
+        for(int i =0; i<fireStations.size(); i++) {
+            FireStation currentFireStation = fireStations.get(i);
+            if (currentFireStation.getAddress().equals(fireStation.getAddress())
+                    && currentFireStation.getStation().equals(fireStation.getStation())) {
+                fireStations.remove(i);
+                dataLoaderService.saveData(dataLoaded);
+                return;  // Exit after removing
+            }
+        } // end of for
+        throw new IllegalArgumentException("Fire station: " + fireStation.getStation() + " with address " + fireStation.getAddress() + " does not exist");
+
+    } // end of deleteFireStation
 
 } // end of class
