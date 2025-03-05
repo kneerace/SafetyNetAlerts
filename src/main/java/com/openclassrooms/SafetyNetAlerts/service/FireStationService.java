@@ -164,6 +164,32 @@ public class FireStationService {
 
         //return the response
         return new FireResponse(fireStationsNumber, personDetails);
-
     } // end of getFireStationByAddress
+
+//    http://localhost:8080/firestation
+//    This endpoint will provide the following via Http Post/Put/Delete: Add a firestation/address mapping.
+//    Update an address’ firestation number.
+//    Delete a firestation/address mapping.
+
+    public FireStation addFireStation(FireStation fireStation) {
+        // getting data from the service into DataLoaded POJO
+        DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
+        List<FireStation> fireStations = dataLoaded.getFirestations();
+
+        boolean fireStationExists = fireStations.stream()
+                .anyMatch(firestation -> firestation.getAddress().equals(fireStation.getAddress())
+                        && firestation.getStation().equals(fireStation.getStation()));
+
+        if (fireStationExists) {
+            throw new IllegalArgumentException("Fire station already exists");
+        }
+
+        fireStations.add(fireStation);
+        return fireStation;
+    }   // end of addFireStation
+
+
+    
+
+
 } // end of class
