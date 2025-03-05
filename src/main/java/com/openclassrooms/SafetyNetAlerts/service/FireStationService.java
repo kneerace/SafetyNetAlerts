@@ -189,7 +189,39 @@ public class FireStationService {
     }   // end of addFireStation
 
 
-    
+    public FireStation updateFireStation(FireStation fireStation) {
+        // getting data from the service into DataLoaded POJO
+        DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
+        List<FireStation> fireStations = dataLoaded.getFirestations();
+
+        // check if the fire station with input address exists and if so update the fire station number
+        boolean fireStationExists = fireStations.stream()
+                .anyMatch(firestation -> firestation.getAddress().equals(fireStation.getAddress()));
+
+        if (fireStationExists) {
+            FireStation fireStationToUpdate = fireStations.stream()
+                    .filter(firestation -> firestation.getAddress().equals(fireStation.getAddress()))
+                    .findFirst()
+                    .orElse(null);
+            fireStationToUpdate.setStation(fireStation.getStation());
+            return fireStationToUpdate;
+        }   else {
+            throw new IllegalArgumentException("Fire station with address " + fireStation.getAddress() + " does not exist");
+        }
+
+        /*
+        return fireStations.stream()
+            .filter(f -> f.getAddress().equals(fireStation.getAddress()))
+            .findFirst()
+            .map(existingFireStation -> {
+                existingFireStation.setStation(fireStation.getStation());
+                return existingFireStation;
+            })
+            .orElseThrow(() -> new IllegalArgumentException("Fire station with address "
+                    + fireStation.getAddress() + " does not exist"));
+         */
+
+    }   // end of updateFireStation
 
 
 } // end of class
