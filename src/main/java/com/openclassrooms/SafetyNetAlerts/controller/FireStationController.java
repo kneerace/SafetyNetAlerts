@@ -46,4 +46,18 @@ public class FireStationController {
         }
     } // end of updateFireStation
 
+    @DeleteMapping
+    public ResponseEntity<?> deleteFireStation( @RequestBody FireStation fireStation) {
+        try{
+            fireStationService.deleteFireStation(fireStation);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    Map.of("message", "Fire station deleted successfully")
+            );
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    Map.of("message", e.getMessage())
+            );
+        }
+    } // end of deleteFireStation
+
 } // end of FireStationController
