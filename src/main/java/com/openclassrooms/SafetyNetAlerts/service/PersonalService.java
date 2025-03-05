@@ -140,11 +140,10 @@ This will return the email addresses of all of the people in the city.
 //            persons.set(index, person);
 //            return person;
 //        }
-
-//        else{
-//            throw new IllegalArgumentException("Person not found in the list");
-            return null;
-//        }
+        else{
+            throw new IllegalArgumentException("Person not found in the list");
+//            return null;
+        }
     } // end of updatePerson
 
 
@@ -157,5 +156,19 @@ This will return the email addresses of all of the people in the city.
         orElseThrow()	        Throws an exception if the value is missing.
         ifPresent(Consumer<T>)	Runs a function if the value exists.
      */
+
+    public Person deletePerson(Person person) {
+        DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
+        List<Person> persons = dataLoaded.getPersons();
+        Optional<Person> existingPerson = persons.stream()
+                .filter(p-> p.getFirstName().equalsIgnoreCase(person.getFirstName())
+                        && p.getLastName().equalsIgnoreCase(person.getLastName()))
+                .findFirst();
+        if(existingPerson.isEmpty()){
+            throw new IllegalArgumentException("Person not found in the list");
+        }
+        existingPerson.ifPresent(persons::remove);
+        return existingPerson.orElse(null);
+    }
 
 } // end of class
