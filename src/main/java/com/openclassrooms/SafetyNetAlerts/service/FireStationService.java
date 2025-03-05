@@ -238,6 +238,8 @@ public class FireStationService {
         } else {
             throw new IllegalArgumentException("Fire station: " + fireStation.getStation() + " with address " + fireStation.getAddress() + " does not exist");
         }*/
+
+        /*
         for(int i =0; i<fireStations.size(); i++) {
             FireStation currentFireStation = fireStations.get(i);
             if (currentFireStation.getAddress().equals(fireStation.getAddress())
@@ -248,6 +250,16 @@ public class FireStationService {
             }
         } // end of for
         throw new IllegalArgumentException("Fire station: " + fireStation.getStation() + " with address " + fireStation.getAddress() + " does not exist");
+        */
+            boolean removed = fireStations.removeIf(firestation -> firestation.getAddress().equals(fireStation.getAddress())
+                    && firestation.getStation().equals(fireStation.getStation()));  // remove the fire station
+
+            if(removed) {
+                dataLoaderService.saveData(dataLoaded);
+            }
+            else {
+                throw new IllegalArgumentException("Fire station: " + fireStation.getStation() + " with address " + fireStation.getAddress() + " does not exist");
+            }
 
     } // end of deleteFireStation
 
