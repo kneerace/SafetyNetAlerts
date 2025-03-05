@@ -51,12 +51,23 @@ Delete a person. (Use a combination of firstName and lastName as a unique identi
                 Person updatedPerson = personalService.updatePerson(person);
                 return new ResponseEntity<>(updatedPerson, HttpStatus.OK);
         } catch(IllegalArgumentException e){
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                     Map.of("message", e.getMessage())
-        );
-    }
-
-
+            );
+        }
     } // end updatePerson
 
+
+    @DeleteMapping
+    public ResponseEntity<?> deletePerson(@RequestBody Person person) {
+        try{
+            personalService.deletePerson(person);
+            return  ResponseEntity.status(HttpStatus.OK).body(
+                    Map.of("message", "Person deleted successfully"));
+        } catch(IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    Map.of("message", e.getMessage())
+            );
+        }
+    } // end deletePerson
 } // end class
