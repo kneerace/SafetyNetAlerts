@@ -28,12 +28,12 @@ public class DataController {
         this.personalService = personalService;
     }
 
-    @GetMapping("/firestation")
-    public FireStationServiceResponse getFireStationByStationNumber( int stationNumber) {
+    /*@GetMapping("/firestation")
+    public FireStationServiceResponse getFireStationByStationNumber(@RequestParam int stationNumber) {
 
         return fireStationService.getFireStationByStationNumber(stationNumber);
 
-    } // end of method
+    } // end of method*/
 
     @GetMapping("/childAlert")
     public List<ChildAlertResponse> getChildByAddress(@RequestParam String address){
