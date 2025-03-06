@@ -35,7 +35,34 @@ public class MedicalRecordService {
 
         medicalRecords.add(medicalRecord);
         return medicalRecord;
-    } // end getMedicalRecord
+    } // end addMedicalRecord
+
+    public MedicalRecord updateMedicalRecord(MedicalRecord medicalRecord) {
+        // getting data from the service into DataLoaded POJO
+        DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
+        List<MedicalRecord> medicalRecords = dataLoaded.getMedicalrecords();
+
+        //check if medical record exists with the firstName and lastname
+        boolean medicalRecordExists = medicalRecords.stream()
+                .anyMatch(medRcrd -> medRcrd.getFirstName().equals(medicalRecord.getFirstName()
+                        ) && medRcrd.getLastName().equals(medicalRecord.getLastName())
+                        );
+
+        if (!medicalRecordExists) {
+            throw new IllegalArgumentException("Medical record not found for person with " + medicalRecord.getFirstName() + " "
+                    + medicalRecord.getLastName());
+        }
+
+        MedicalRecord medicalRecordToUpdate = medicalRecords.stream()
+                .filter(medRcrd -> medRcrd.getFirstName().equals(medicalRecord.getFirstName())
+                        && medRcrd.getLastName().equals(medicalRecord.getLastName()))
+                .findFirst()
+                .orElse(null);
+        medicalRecordToUpdate.setBirthdate(medicalRecord.getBirthdate());
+        medicalRecordToUpdate.setMedications(medicalRecord.getMedications());
+        medicalRecordToUpdate.setAllergies(medicalRecord.getAllergies());
+        return medicalRecordToUpdate;
+    } // end updateMedicalRecord
 
 
-}
+} // end class
