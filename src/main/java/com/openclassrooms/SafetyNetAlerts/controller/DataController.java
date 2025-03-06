@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 public class DataController {
 
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(DataController.class);
     private final FireStationService fireStationService;
     private final FloodService floodService;
     private final PersonalService personalService;
@@ -37,48 +38,102 @@ public class DataController {
 
     @GetMapping("/childAlert")
     public List<ChildAlertResponse> getChildByAddress(@RequestParam String address){
-        return fireStationService.getChildByAddress(address);
+        logger.info("Recieved request to get childAlert for address: {}", address);
+        List<ChildAlertResponse> response;
+        try {
+             response = fireStationService.getChildByAddress(address);
+            logger.debug("ChildAlertResponse retrieved successfully: {}", response);
+        } catch (Exception e) {
+            logger.error("Error retrieving childAlert for address {}: {}",address,  e.getMessage(), e);
+            throw e; // Re-throw the exception so it is properly handled
+        }
+
+        logger.info("Successfully processed childAlert request for address: {}", address);
+        return  response;
+
+
     } // end of getChildByAddress
 
     @GetMapping("/phoneAlert")
     public List<String> getPhoneNumbersWithinFireStationJurisdiction(@RequestParam int firestation) {
+        logger.info("Received request to get phoneAlert for firestation: {}", firestation);
 
-        return fireStationService.getPhoneNumbersWithinFireStationJurisdiction(firestation);
+        List<String> resposne;
+        try{
+            resposne = fireStationService.getPhoneNumbersWithinFireStationJurisdiction(firestation);
+            logger.debug("Phone number retrieved successfully for firestation: {}", firestation);
+        } catch(Exception e){
+            logger.error("Error retrieving phoneAlert for firestation {}: {}", firestation, e.getMessage(), e);
+            throw e;
+        }
+        logger.info("Successfully processed phoneAlert request for firestation {}", firestation);
+        return resposne;
 
     } // end of getPhoneNumbersWithinFireStationJurisdiction
 
     @GetMapping("/fire")
     public FireResponse getFireStationByAddress(@RequestParam String address) {
-
-        return fireStationService.getFireStationByAddress(address);
+        logger.info("Received request to get fireStations for address: {}", address);
+        FireResponse response;
+        try {
+            response = fireStationService.getFireStationByAddress(address);
+            logger.debug("FireResponse retrieved successfully for address: {}", address);
+        } catch (Exception e) {
+            logger.error("Error retrieving fireStations for address {}: {}", address, e.getMessage(), e);
+            throw e;
+        }
+        logger.info("Successfully processed fireStations request for address: {}", address);
+        return response;
     } // end of getFireStationByAddress
 
     @GetMapping("/flood/stations")
     public List<HouseholdByStation> getHouseholdByFireStations(@RequestParam List<String> stations) {
+        logger.info("Received request to get household for fire stations: {}", stations);
 
-        return floodService.getHouseholdByFireStations(stations);
+        List<HouseholdByStation> response;
+        try {
+            response = floodService.getHouseholdByFireStations(stations);
+            logger.debug("Household retrieved successfully for fire stations: {}", stations);
+        } catch (Exception e) {
+            logger.error("Error retrieving household for fire stations {}: {}", stations, e.getMessage(), e);
+            throw e;
+        }
+        logger.info("Successfully processed household request for fire stations: {}", stations);
+        return response;
     } // end of getHouseholdByFireStations
 
 
     @GetMapping("/personInfo")
     public PersonalInfoResponse getPersonInfo(@RequestParam String firstName, @RequestParam String lastName) {
-//        logger.info("Request: /personInfo?firstname={}&lastname={}", firstName, lastName);
-        PersonalInfoResponse response = personalService.getPersonInfo(firstName, lastName);
-//        logger.info("Response: {}", response);
+        logger.info("Received request to get PersonalInfo for firstname={} and lastname={}", firstName, lastName);
+        PersonalInfoResponse response;
+        try {
+             response = personalService.getPersonInfo(firstName, lastName);
+            logger.debug("PersonalInfo retrieved successfully for firstname={} and lastname={}", firstName, lastName);
+        } catch (Exception e) {
+            logger.error("Error retrieving PersonalInfo for firstname={} and lastname={}: {}", firstName, lastName, e.getMessage(), e);
+            throw e;
+        }
         return response;
-    }
+    } // end of getPersonInfo
 
     @GetMapping("/communityEmail")
     public ResponseEntity<EmailListResponse> getCommunityEmail(@RequestParam String city) {
-//        logger.info("Request: /communityEmail?city={}", city);
-//        List<String> emails = personalInfoService.getCommunityEmail(city);
-//        logger.info("Emails for city: {} are: {}", city, emails);
-        EmailListResponse emails = personalService.getCommunityEmailList(city);
-//        return emails;
-        return emails.getEmailList().isEmpty()
+        logger.info("Received request to get communityEmail for city: {}", city);
+        EmailListResponse response;
+        try{
+            response = personalService.getCommunityEmailList(city);
+            logger.debug("EmailListResponse retrieved successfully for city: {}", city);
+        } catch (Exception e) {
+            logger.error("Error retrieving EmailListResponse for city {}: {}", city, e.getMessage(), e);
+            throw e;
+        }
+        logger.info("Successfully processed communityEmail request for city: {}", city);
+
+        return response.getEmailList().isEmpty()
 //                ? ResponseEntity.notFound().build()
                 ? ResponseEntity.ok(new EmailListResponse(Collections.emptyList()))  // returining empty json {}
-                : ResponseEntity.ok(emails);
+                : ResponseEntity.ok(response);
     } // end of getCommunityEmail
 
     } // end of class
