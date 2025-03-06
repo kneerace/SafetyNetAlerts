@@ -19,6 +19,13 @@ public class MedicalRecordService {
         this.dataLoaderService = dataLoaderService;
     }       // end constructor
 
+    public List<MedicalRecord> getAllMedicalRecords() {
+        // getting data from the service into DataLoaded POJO
+        DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
+        return dataLoaded.getMedicalrecords();
+    } // end getAllMedicalRecords
+
+
     public MedicalRecord addMedicalRecord(MedicalRecord medicalRecord) {
         // getting data from the service into DataLoaded POJO
         DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
@@ -64,5 +71,20 @@ public class MedicalRecordService {
         return medicalRecordToUpdate;
     } // end updateMedicalRecord
 
+    public void deleteMedicalRecord(String firstName, String lastName) {
+        // getting data from the service into DataLoaded POJO
+        DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
+        List<MedicalRecord> medicalRecords = dataLoaded.getMedicalrecords();
+
+        //check if medical record exists with the firstName and lastname
+        boolean removed = medicalRecords.removeIf(
+                (medRcrd -> medRcrd.getFirstName().equals(firstName)
+                        && medRcrd.getLastName().equals(lastName)));
+        if(removed){
+            dataLoaderService.saveData(dataLoaded);
+        }else {
+            throw new IllegalArgumentException("Medical record not found for person with " + firstName + " " + lastName);
+        }
+    } // end deleteMedicalRecord
 
 } // end class
