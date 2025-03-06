@@ -73,18 +73,21 @@ public class DataController {
     } // end of getPhoneNumbersWithinFireStationJurisdiction
 
     @GetMapping("/fire")
-    public FireResponse getFireStationByAddress(@RequestParam String address) {
+    public ResponseEntity<?> getFireStationByAddress(@RequestParam String address) {
         logger.info("Received request to get fireStations for address: {}", address);
         FireResponse response;
         try {
             response = fireStationService.getFireStationByAddress(address);
+            if(response == null) {
+                logger.info("No fireStations found for address: {}", address);
+                return ResponseEntity.ok(Collections.emptyMap());  // to return {}
+            }
             logger.debug("FireResponse retrieved successfully for address: {}", address);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             logger.error("Error retrieving fireStations for address {}: {}", address, e.getMessage(), e);
             throw e;
         }
-        logger.info("Successfully processed fireStations request for address: {}", address);
-        return response;
     } // end of getFireStationByAddress
 
     @GetMapping("/flood/stations")
