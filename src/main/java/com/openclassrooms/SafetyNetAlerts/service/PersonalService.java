@@ -26,6 +26,10 @@ This should return the person’s name, address, age, email, list of medications
 
 */
 
+    public List<Person> getAllPersons() {
+        return dataLoaderService.getDataLoaded().getPersons();
+    }
+
     public PersonalInfoResponse getPersonInfo( String firstName,  String lastName) {
 
 //        logger.info("Request: /personInfo?firstname={}&lastname={}", firstName, lastName); // Log request
@@ -157,18 +161,18 @@ This will return the email addresses of all of the people in the city.
         ifPresent(Consumer<T>)	Runs a function if the value exists.
      */
 
-    public Person deletePerson(Person person) {
+    public void deletePerson(String firstName, String lastName) {
         DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
         List<Person> persons = dataLoaded.getPersons();
         Optional<Person> existingPerson = persons.stream()
-                .filter(p-> p.getFirstName().equalsIgnoreCase(person.getFirstName())
-                        && p.getLastName().equalsIgnoreCase(person.getLastName()))
+                .filter(p-> p.getFirstName().equalsIgnoreCase(firstName)
+                        && p.getLastName().equalsIgnoreCase(lastName))
                 .findFirst();
         if(existingPerson.isEmpty()){
             throw new IllegalArgumentException("Person not found in the list");
         }
         existingPerson.ifPresent(persons::remove);
-        return existingPerson.orElse(null);
-    }
+
+    } // end of deletePerson
 
 } // end of class
