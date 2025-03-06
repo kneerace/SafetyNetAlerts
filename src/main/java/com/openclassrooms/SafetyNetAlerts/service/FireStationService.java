@@ -171,6 +171,12 @@ public class FireStationService {
 //    Update an address’ firestation number.
 //    Delete a firestation/address mapping.
 
+
+    public List<FireStation> getFireStations() {
+        // getting data from the service into DataLoaded POJO
+        return dataLoaderService.getDataLoaded().getFirestations();
+    } // end of getFireStations
+
     public FireStation addFireStation(FireStation fireStation) {
         // getting data from the service into DataLoaded POJO
         DataLoaded dataLoaded = dataLoaderService.getDataLoaded();

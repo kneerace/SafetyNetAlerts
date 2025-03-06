@@ -1,11 +1,13 @@
 package com.openclassrooms.SafetyNetAlerts.controller;
 
 import com.openclassrooms.SafetyNetAlerts.model.FireStation;
+import com.openclassrooms.SafetyNetAlerts.model.FireStationServiceResponse;
 import com.openclassrooms.SafetyNetAlerts.service.FireStationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -21,6 +23,19 @@ public class FireStationController {
 //    This endpoint will provide the following via Http Post/Put/Delete: Add a firestation/address mapping.
 //    Update an address’ firestation number.
 //    Delete a firestation/address mapping.
+
+
+    @GetMapping
+    public FireStationServiceResponse getFireStationByStationNumber(@RequestParam int stationNumber) {
+
+        return fireStationService.getFireStationByStationNumber(stationNumber);
+
+    } // end of method
+
+    @GetMapping("/all")
+    public List<FireStation> getFireStations() {
+        return fireStationService.getFireStations();
+    } // end of getFireStations
 
     @PostMapping
     public ResponseEntity<?> addFireStation( @RequestBody FireStation fireStation) {
