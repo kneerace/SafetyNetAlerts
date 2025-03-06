@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class DataController {
@@ -104,17 +105,20 @@ public class DataController {
 
 
     @GetMapping("/personInfo")
-    public PersonalInfoResponse getPersonInfo(@RequestParam String firstName, @RequestParam String lastName) {
+    public ResponseEntity<?> getPersonInfo(@RequestParam String firstName, @RequestParam String lastName) {
         logger.info("Received request to get PersonalInfo for firstname={} and lastname={}", firstName, lastName);
         PersonalInfoResponse response;
         try {
              response = personalService.getPersonInfo(firstName, lastName);
+             if (response == null) {
+                 return ResponseEntity.ok(Collections.emptyMap());
+             }
             logger.debug("PersonalInfo retrieved successfully for firstname={} and lastname={}", firstName, lastName);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             logger.error("Error retrieving PersonalInfo for firstname={} and lastname={}: {}", firstName, lastName, e.getMessage(), e);
             throw e;
         }
-        return response;
     } // end of getPersonInfo
 
     @GetMapping("/communityEmail")
