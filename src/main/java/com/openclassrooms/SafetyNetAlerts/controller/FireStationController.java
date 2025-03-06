@@ -3,16 +3,21 @@ package com.openclassrooms.SafetyNetAlerts.controller;
 import com.openclassrooms.SafetyNetAlerts.model.FireStation;
 import com.openclassrooms.SafetyNetAlerts.model.FireStationServiceResponse;
 import com.openclassrooms.SafetyNetAlerts.service.FireStationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/firestation")
 public class FireStationController {
+
+    private static final Logger logger = LoggerFactory.getLogger(FireStationController.class);
     private FireStationService fireStationService;
 
     public FireStationController(FireStationService fireStationService) {
@@ -26,9 +31,22 @@ public class FireStationController {
 
 
     @GetMapping
-    public FireStationServiceResponse getFireStationByStationNumber(@RequestParam int stationNumber) {
+    public ResponseEntity<?> getFireStationByStationNumber(@RequestParam int stationNumber) {
+        logger.debug("getFireStationByStationNumber called with stationNumber: {}", stationNumber);
 
-        return fireStationService.getFireStationByStationNumber(stationNumber);
+        FireStationServiceResponse fireStationServiceResponse;
+        try{
+            fireStationServiceResponse = fireStationService.getFireStationByStationNumber(stationNumber);
+            if(fireStationServiceResponse == null) {
+                logger.info("No fire station found for station number: {}", stationNumber);  // log response
+                return  ResponseEntity.ok(Collections.emptyMap())   ;
+            }
+            logger.info("Fire station found for station number: {}", stationNumber);  // log response
+            return ResponseEntity.ok(fireStationServiceResponse);
+        } catch (Exception e) {
+            logger.error("Eror retrieving fire stations: {}", e.getMessage(), e);
+            throw e;
+        }
 
     } // end of method
 
