@@ -41,6 +41,9 @@ public class LocalFileDataLoaderService implements DataLoaderService {
     } // end of loadData
 
     public DataLoaded getDataLoaded() {
+        if (dataLoaded == null) {
+            throw new IllegalStateException("Data is not loaded yet, Ensure loadData() is called first");
+        }
         return dataLoaded;
     } // end of getDataLoaded
 
