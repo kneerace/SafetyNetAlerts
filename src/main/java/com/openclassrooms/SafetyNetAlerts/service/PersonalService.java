@@ -46,7 +46,8 @@ This should return the person’s name, address, age, email, list of medications
 
         if (person == null) {
 //            logger.info("No person found for first name: {} and last name: {}", firstName, lastName);
-            return new PersonalInfoResponse();
+//            return new PersonalInfoResponse();
+            return null;
         }
 
         MedicalRecord medicalRecord = PersonUtils.findMedicalRecord(person, medicalRecords);
