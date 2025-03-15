@@ -65,7 +65,7 @@ Delete a medical record. (Use a combination of firstName and lastName as a uniqu
         try{
              medicalRecordService.deleteMedicalRecord(firstName, lastName);
             return ResponseEntity.status(HttpStatus.OK).body(
-                    Map.of("message", "MedicalRecords for+" + firstName + " " + lastName + " deleted successfully"));
+                    Map.of("message", "MedicalRecords for" + firstName + " " + lastName + " deleted successfully"));
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
