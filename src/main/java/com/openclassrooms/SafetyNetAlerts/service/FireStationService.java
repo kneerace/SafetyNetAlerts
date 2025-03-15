@@ -3,15 +3,19 @@ package com.openclassrooms.SafetyNetAlerts.service;
 import com.openclassrooms.SafetyNetAlerts.model.*;
 import com.openclassrooms.SafetyNetAlerts.util.AgeCalculator;
 import com.openclassrooms.SafetyNetAlerts.util.PersonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class FireStationService {
 
+    private static final Logger logger = LoggerFactory.getLogger(FireStationService.class);
     private final LocalFileDataLoaderService dataLoaderService;
 
     @Autowired
@@ -63,10 +67,16 @@ public class FireStationService {
                 }
             }
         }  // end for
+        if(numberOfAdults == 0 && numberOfChildren == 0) {
+            logger.info("No person found for station number: {}", stationNumber);  // log response
+            return null;
+        }
         return new FireStationServiceResponse(personInfos, numberOfAdults, numberOfChildren);
     } // end of getFireStationByStationNumber
 
     public List<ChildAlertResponse> getChildByAddress( String address){
+        logger.debug("Fetching childAlert for address: {}", address);
+
         // getting data from the service into DataLoaded POJO
         DataLoaded dataLoaded = dataLoaderService.getDataLoaded();
 
@@ -76,8 +86,12 @@ public class FireStationService {
         List<Person> houseHoldMembers = persons.stream()
                 .filter(person -> person.getAddress().equalsIgnoreCase(address))
                 .toList();
-//        logger.info("Total Household members: {}", houseHoldMembers.size());
+        logger.debug("Total Household members found at {}: {}", address, houseHoldMembers.size());
 
+        if(houseHoldMembers.isEmpty()) {
+            logger.warn("No household members found at: {}", address);
+            return Collections.emptyList(); // return empty list instead of null
+        }
         // getting children i.e. anyone under the age of 18
         List<ChildAlertResponse>  children = houseHoldMembers.stream()
 //                .filter(person -> person.getAddress().equalsIgnoreCase(address) && PersonUtils.isChild(person, medicalRecords))
@@ -93,6 +107,12 @@ public class FireStationService {
                 })
                 .filter(child -> child != null)  // removing nulls
                 .collect(Collectors.toList());  // converting to list
+        logger.info("Total Children found at {}: {}", address, children.size());
+
+        if(children.isEmpty()) {
+            logger.warn("No children found at: {}", address);
+        }
+
         return children;
     } // end of getChildByAddress
 
@@ -161,7 +181,10 @@ public class FireStationService {
                                 medicalRecord.getAllergies());
                 })
                 .collect(Collectors.toList());
-
+        if (personDetails.isEmpty()) {
+            logger.warn("No person found at: {}", address);
+            return null;
+        }
         //return the response
         return new FireResponse(fireStationsNumber, personDetails);
     } // end of getFireStationByAddress
