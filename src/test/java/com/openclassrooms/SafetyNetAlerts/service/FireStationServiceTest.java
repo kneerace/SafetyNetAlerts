@@ -1,8 +1,6 @@
 package com.openclassrooms.SafetyNetAlerts.service;
 
 import com.openclassrooms.SafetyNetAlerts.model.*;
-import com.openclassrooms.SafetyNetAlerts.util.AgeCalculator;
-import com.openclassrooms.SafetyNetAlerts.util.PersonUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class FireStationServiceTest {
 
