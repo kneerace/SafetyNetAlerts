@@ -1,83 +1,81 @@
-//package com.openclassrooms.SafetyNetAlerts.service;
-//
-//
-//import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.openclassrooms.SafetyNetAlerts.model.*;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//import org.springframework.core.io.ClassPathResource;
-//
-//import java.io.ByteArrayInputStream;
-//import java.io.IOException;
-//import java.io.InputStream;
-//import java.util.Arrays;
-//import java.util.List;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.Mockito.*;
-//
-//@ExtendWith(MockitoExtension.class)
-//public class LocalFileDataLoaderServiceTest {
-//
-//    @InjectMocks
-//    private LocalFileDataLoaderService dataLoaderService;
-//
-//    @Mock
-//    private ObjectMapper objectMapper;
-//
-//    @Mock
-//    private ClassPathResource resource;
-//
-//    @Test
-//    public void testLoadData_success() throws IOException {
-//        // Arrange
-//        // Create sample data
-//        List<Person> persons = Arrays.asList(new Person("John", "Doe", "123 Main St", "City", "12345", "555-1234", "john.doe@example.com"));
-//        List<FireStation> firestations = Arrays.asList(new FireStation("123 Main St", "1"));
-//        List<MedicalRecord> medicalrecords = Arrays.asList(new MedicalRecord("John", "Doe", "01/01/1990", Arrays.asList("Med1", "Med2"), Arrays.asList("Allergy1")));
-//
-//        DataLoaded expectedData = new DataLoaded(persons, firestations, medicalrecords); // Create an expected DataLoaded object
-//
-//        InputStream inputStream = mock(InputStream.class);
-//
-//        when(resource.getInputStream()).thenReturn(inputStream); // Mock the getInputStream() method
-//        when(objectMapper.readValue(any(InputStream.class), eq(DataLoaded.class))).thenReturn(expectedData);
-//
-//
-//        // Act
-//        DataLoaded actualData = dataLoaderService.loadData();
-//
-//        // Assert
-//        assertNotNull(actualData);
-//        assertEquals(expectedData.getPersons(), actualData.getPersons());
-//        assertEquals(expectedData.getFirestations(), actualData.getFirestations());
-//        assertEquals(expectedData.getMedicalrecords(), actualData.getMedicalrecords());
-//        verify(resource, times(1)).getInputStream();
-//        verify(objectMapper, times(1)).readValue(inputStream, DataLoaded.class);
-//    }
-//
-//    @Test
-//    public void testLoadData_fileNotFound() throws IOException {
-//
-//        when(new ClassPathResource("testData.json").getInputStream()).thenThrow(IOException.class);
-//
-//        // Act & Assert
-//        assertThrows(RuntimeException.class, () -> dataLoaderService.loadData());
-//    }
-//
-//
-//    @Test
-//    public void testLoadData_jsonParsingError() throws IOException {
-//        InputStream inputStream = new ByteArrayInputStream("invalid json".getBytes());
-//        when(new ClassPathResource("testData.json").getInputStream()).thenReturn(inputStream);
-//        when(objectMapper.readValue(any(InputStream.class), org.mockito.Mockito.eq(DataLoaded.class))).thenThrow(IOException.class);
-//
-//
-//        // Act & Assert
-//        assertThrows(RuntimeException.class, () -> dataLoaderService.loadData());
-//    }
-//}
+package com.openclassrooms.SafetyNetAlerts.service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.openclassrooms.SafetyNetAlerts.model.DataLoaded;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.io.IOException;
+import java.util.Collections;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class LocalFileDataLoaderServiceTest {
+
+    @Mock
+    private ObjectMapper objectMapper;
+
+    @InjectMocks
+    private LocalFileDataLoaderService localFileDataLoaderService;
+
+    @Test
+    void loadData_success() throws IOException {
+        DataLoaded dataLoaded = new DataLoaded();
+        dataLoaded.setPersons(Collections.emptyList());
+        dataLoaded.setFirestations(Collections.emptyList());
+        dataLoaded.setMedicalrecords(Collections.emptyList());
+        when(objectMapper.readValue(any(java.io.InputStream.class), eq(DataLoaded.class))).thenReturn(dataLoaded);
+
+        DataLoaded loadedData = localFileDataLoaderService.loadData();
+        assertNotNull(loadedData);
+        verify(objectMapper, times(1)).readValue(any(java.io.InputStream.class), eq(DataLoaded.class));
+    }
+
+    @Test
+    void loadData_failure() throws IOException {
+        when(objectMapper.readValue(any(java.io.InputStream.class), eq(DataLoaded.class))).thenThrow(new IOException("Test Exception"));
+        assertThrows(RuntimeException.class, () -> {
+            localFileDataLoaderService.loadData();
+        });
+    }
+
+    @Test
+    void getDataLoaded_success() throws IOException {
+        DataLoaded dataLoaded = new DataLoaded();
+        dataLoaded.setPersons(Collections.emptyList());
+        dataLoaded.setFirestations(Collections.emptyList());
+        dataLoaded.setMedicalrecords(Collections.emptyList());
+        when(objectMapper.readValue(any(java.io.InputStream.class), eq(DataLoaded.class))).thenReturn(dataLoaded);
+
+        localFileDataLoaderService.loadData();
+        DataLoaded loadedData = localFileDataLoaderService.getDataLoaded();
+        assertNotNull(loadedData);
+    }
+
+    @Test
+    void getDataLoaded_notLoaded() {
+        LocalFileDataLoaderService service = new LocalFileDataLoaderService(new ObjectMapper());
+        assertThrows(IllegalStateException.class, () -> service.getDataLoaded());
+    }
+
+    @Test
+    void saveData_success() throws IOException {
+        DataLoaded dataLoaded = new DataLoaded();
+        dataLoaded.setPersons(Collections.emptyList());
+        dataLoaded.setFirestations(Collections.emptyList());
+        dataLoaded.setMedicalrecords(Collections.emptyList());
+        when(objectMapper.readValue(any(java.io.InputStream.class), eq(DataLoaded.class))).thenReturn(dataLoaded);
+
+        localFileDataLoaderService.loadData();
+        DataLoaded data = new DataLoaded();
+        localFileDataLoaderService.saveData(data);
+        assertEquals(data, localFileDataLoaderService.getDataLoaded());
+    }
+} // end of class
