@@ -51,8 +51,7 @@ public class MedicalRecordService {
 
         //check if medical record exists with the firstName and lastname
         boolean medicalRecordExists = medicalRecords.stream()
-                .anyMatch(medRcrd -> medRcrd.getFirstName().equals(medicalRecord.getFirstName()
-                        ) && medRcrd.getLastName().equals(medicalRecord.getLastName())
+                .anyMatch(medRcrd -> medRcrd.getFirstName().equals(medicalRecord.getFirstName()) && medRcrd.getLastName().equals(medicalRecord.getLastName())
                         );
 
         if (!medicalRecordExists) {
@@ -60,8 +59,7 @@ public class MedicalRecordService {
                     + medicalRecord.getLastName());
         }
 
-        MedicalRecord medicalRecordToUpdate = medicalRecords.stream()
-                .filter(medRcrd -> medRcrd.getFirstName().equals(medicalRecord.getFirstName())
+        MedicalRecord medicalRecordToUpdate = medicalRecords.stream().filter(medRcrd -> medRcrd.getFirstName().equals(medicalRecord.getFirstName())
                         && medRcrd.getLastName().equals(medicalRecord.getLastName()))
                 .findFirst()
                 .orElse(null);
@@ -78,8 +76,7 @@ public class MedicalRecordService {
 
         //check if medical record exists with the firstName and lastname
         boolean removed = medicalRecords.removeIf(
-                (medRcrd -> medRcrd.getFirstName().equals(firstName)
-                        && medRcrd.getLastName().equals(lastName)));
+                (medRcrd -> medRcrd.getFirstName().equals(firstName)&& medRcrd.getLastName().equals(lastName)));
         if(removed){
             dataLoaderService.saveData(dataLoaded);
         }else {
