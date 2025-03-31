@@ -5,6 +5,7 @@ import com.openclassrooms.SafetyNetAlerts.model.DataLoaded;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,10 @@ import java.io.InputStream;
 public class LocalFileDataLoaderService implements DataLoaderService {
 
     public static final Logger logger = LoggerFactory.getLogger(LocalFileDataLoaderService.class);
-    public static final String DATA_FILE_NAME = "testdata.json";
+
+    @Value("${data.file.name}")
+    private String dataFileName;
+//    public static final String DATA_FILE_NAME = "data.json";
 
     public final ObjectMapper objectMapper;
     private DataLoaded dataLoaded; // store the loaded data in the memory
@@ -32,17 +36,21 @@ public class LocalFileDataLoaderService implements DataLoaderService {
     }
     @Override
     public DataLoaded loadData() {
-        logger.info("Loading data from local file: {}", DATA_FILE_NAME);
+//        logger.info("Loading data from local file: {}", DATA_FILE_NAME);
+        logger.info("Loading data from local file: {}", dataFileName);
 
         try {
-            InputStream inputStream = new ClassPathResource(DATA_FILE_NAME).getInputStream();
+//            InputStream inputStream = new ClassPathResource(DATA_FILE_NAME).getInputStream();
+            InputStream inputStream = new ClassPathResource(dataFileName).getInputStream();
             DataLoaded data = objectMapper.readValue(inputStream, DataLoaded.class);
             logger.info("Successfully loaded data with {} persons, {} firestations and {} medical records, from local file: {}"
-                    , data.getPersons().size(), data.getFirestations().size(), data.getMedicalrecords().size(), DATA_FILE_NAME);
+//                    , data.getPersons().size(), data.getFirestations().size(), data.getMedicalrecords().size(), DATA_FILE_NAME);
+                    , data.getPersons().size(), data.getFirestations().size(), data.getMedicalrecords().size(), dataFileName);
             this.dataLoaded = data; // here we are just updating in-memory data
             return data;
         } catch (IOException e) {
-            logger.error("Failed to load data from local file {}", DATA_FILE_NAME, e);
+//            logger.error("Failed to load data from local file {}", DATA_FILE_NAME, e);
+            logger.error("Failed to load data from local file {}", dataFileName, e);
             throw new RuntimeException("Failed to load data from local file", e);
         }
     } // end of loadData
