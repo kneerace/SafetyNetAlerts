@@ -112,3 +112,35 @@ The application includes a suite of unit tests following the testing pyramid par
 ## Logging
 
 The application logs all requests and responses to provide traceability and aid in debugging.
+
+## Domain Model
+
+[Include a diagram or description of your domain model. This is crucial for other developers to understand the structure of your data. You can use Mermaid diagrams directly in your README like this:]
+
+```mermaid
+classDiagram
+    class Person {
+        -String firstName
+        -String lastName
+        -String address
+        -String city
+        -String zip
+        -String phone
+        -String email
+    }
+
+    class FireStation {
+        -String station
+        -String address
+    }
+
+    class MedicalRecord {
+        -String firstName
+        -String lastName
+        -String birthdate
+        -List<String> medications
+        -List<String> allergies
+    }
+
+    Person "1" -- "1" MedicalRecord : has
+    FireStation "1" -- "*" Person : services
