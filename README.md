@@ -115,8 +115,6 @@ The application logs all requests and responses to provide traceability and aid 
 
 ## Domain Model
 
-[Include a diagram or description of your domain model. This is crucial for other developers to understand the structure of your data. You can use Mermaid diagrams directly in your README like this:]
-
 ```mermaid
 classDiagram
     class Person {
